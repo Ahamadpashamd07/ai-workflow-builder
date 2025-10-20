@@ -1,0 +1,20 @@
+version: "3.9"
+services:
+  db:
+    image: postgres:16
+    container_name: awb_postgres
+    environment:
+      POSTGRES_USER: awb
+      POSTGRES_PASSWORD: awbpass
+      POSTGRES_DB: awbdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - awb_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U awb -d awbdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+volumes:
+  awb_pgdata:
