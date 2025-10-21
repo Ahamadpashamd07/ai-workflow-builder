@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 dotenv.config();
 import workflowRouter from "./routes/workflows";
+import lambdaRouter from "./routes/lambda";
 
 const app = express();
 app.use(express.json());
@@ -13,6 +14,7 @@ app.get("/health", (_req, res) => {
 });
 
 app.use("/workflows", workflowRouter);
+app.use("/lambda", lambdaRouter);
 
 const port = Number(process.env.PORT || 4000);
 app.listen(port, () => console.log(`API listening on http://localhost:${port}`));
