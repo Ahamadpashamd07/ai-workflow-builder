@@ -50,9 +50,32 @@ export async function runLambda(id: string): Promise<{ id: string; status: strin
   return r.json();
 }
 
-// Fallback: get-or-create a default workflow
-export async function fetchDefaultWorkflow(): Promise<FlowGraph> {
-  const r = await fetch(`${API_URL}/workflows/default`);
-  if (!r.ok) throw new Error("Failed to load default workflow");
+export function exportWorkflowDownload(id: string) {
+  window.open(`${API_URL}/workflows/${id}/export`, "_blank");
+}
+
+export async function importWorkflowJSON(body: { name: string; nodes: any[]; edges: any[] }) {
+  const r = await fetch(`${API_URL}/workflows/import-json`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  if (!r.ok) throw new Error("Failed to import JSON");
   return r.json();
+}
+
+export async function importWorkflowFile(file: File) {
+  const form = new FormData();
+  form.append("file", file);
+  const r = await fetch(`${API_URL}/workflows/import-file`, { method: "POST", body: form });
+  if (!r.ok) throw new Error("Failed to import file");
+  return r.json();
+}
+
+export async function fetchDefaultWorkflow() {
+  const r = await fetch(`${API_URL}/workflows`, { method: "GET" });
+  const list = await r.json();
+  if (list.length > 0) return list[0];
+  const c = await createWorkflow("Default Workflow");
+  return c;
 }

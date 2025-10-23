@@ -9,7 +9,6 @@ export default function Canvas({ workflowId }: { workflowId: string }) {
   const [edges, setEdges] = useState<Edge[]>([]);
   const [name, setName] = useState<string>("");
 
-  // Load the chosen workflow
   useEffect(() => {
     (async () => {
       const wf = await fetchWorkflow(workflowId);
@@ -19,7 +18,6 @@ export default function Canvas({ workflowId }: { workflowId: string }) {
     })().catch(console.error);
   }, [workflowId]);
 
-  // Auto-save
   useEffect(() => {
     if (!workflowId) return;
     const t = setTimeout(() => {
